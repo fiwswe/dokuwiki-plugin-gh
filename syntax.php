@@ -1,22 +1,24 @@
 <?php
 
+use dokuwiki\Extension\SyntaxPlugin;
+use dokuwiki\HTTP\DokuHTTPClient;
+
 /**
  * DokuWiki Plugin gh (Syntax Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-class syntax_plugin_gh extends DokuWiki_Syntax_Plugin
+class syntax_plugin_gh extends SyntaxPlugin
 {
-
     /**
      * Extension to highlighting language mapping
      *
-     * When a extenison is not found here it's assumed the extension name equals the language
+     * When a extension is not found here it's assumed the extension name equals the language
      *
      * @var array
      */
-    protected $ext2lang = array(
+    protected $ext2lang = [
         'as' => 'actionscript3',
         'bas' => 'gwbasic',
         'h' => 'c',
@@ -30,8 +32,8 @@ class syntax_plugin_gh extends DokuWiki_Syntax_Plugin
         'py' => 'python',
         'rb' => 'ruby',
         'sh' => 'bash',
-        'yml' => 'yaml',
-    );
+        'yml' => 'yaml'
+    ];
 
     /**
      * @return string Syntax mode type
@@ -65,20 +67,16 @@ class syntax_plugin_gh extends DokuWiki_Syntax_Plugin
     public function connectTo($mode)
     {
         $this->Lexer->addSpecialPattern('{{gh>[^}]*}}', $mode, 'plugin_gh');
-
     }
 
     /** @inheritDoc */
     public function handle($match, $state, $pos, Doku_Handler $handler)
     {
         $match = trim(substr($match, 5, -2));
-        list($url, $lines) = explode(' ', $match, 2);
-        list($from, $to) = explode('-', $lines, 2);
+        [$url, $lines] = sexplode(' ', $match, 2);
+        [$from, $to] = sexplode('-', $lines, 2);
 
-        $data = array(
-            'from' => (int)$from,
-            'to' => (int)$to
-        );
+        $data = ['from' => (int)$from, 'to' => (int)$to];
 
         if (preg_match('/([\w.\-]+)\/([\w-]+\/[\w-]+(\/[\w-]+)?)\/blob\/([\w-]+)\/(.*)$/', $url, $m)) {
             $data['base'] = $m[1];
@@ -131,7 +129,7 @@ class syntax_plugin_gh extends DokuWiki_Syntax_Plugin
             if ($text) {
                 // save to cache
                 io_saveFile($cache, $text);
-            } else if ($tcache) {
+            } elseif ($tcache) {
                 // HTTP failed but there's an old cache - use it
                 $text = io_readFile($cache);
             }
@@ -147,11 +145,11 @@ class syntax_plugin_gh extends DokuWiki_Syntax_Plugin
 
             $lines = explode("\n", $text);
             $lines = array_slice($lines, $data['from'], $len);
-            $text = join("\n", $lines);
+            $text = implode("\n", $lines);
         }
 
         // add icon
-        list($ext) = mimetype($data['file'], false);
+        [$ext] = mimetype($data['file'], false);
         $class = preg_replace('/[^_\-a-z0-9]+/i', '_', $ext);
         $class = 'mediafile mf_' . $class;
 
