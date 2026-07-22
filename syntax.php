@@ -175,7 +175,7 @@ class syntax_plugin_gh extends SyntaxPlugin
             }
             $renderer->doc .= '</span>';
         }
-        $renderer->doc .= '</a></dt>' . DOKU_LF . '<dd>';
+        $renderer->doc .= '</dt>' . DOKU_LF . '<dd>';
 
         if (isset($this->ext2lang[$ext])) {
             $lang = $this->ext2lang[$ext];
