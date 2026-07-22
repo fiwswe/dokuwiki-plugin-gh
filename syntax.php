@@ -167,10 +167,12 @@ class syntax_plugin_gh extends SyntaxPlugin
         $renderer->doc .= '</a>';
         if ($data['from'] || $data['to']) {
             $renderer->doc .= '<span class="gh_lines">';
-            if ($data['from'] == $data['to'])
-                $renderer->doc .= 'Line '.$data['from'];
-            else
-                $renderer->doc .= 'Lines '.$data['from'].' to '.$data['to'];
+            if ($data['from'] == $data['to']) {
+                $renderer->doc .= $this->getLang('line') . ' ' . hsc($data['from']);
+            } else {
+                $renderer->doc .= $this->getLang('lines') . ' ' . hsc($data['from'])
+                    . ' ' . $this->getLang('linesto') . ' ' . hsc($data['to']);
+            }
             $renderer->doc .= '</span>';
         }
         $renderer->doc .= '</a></dt>' . DOKU_LF . '<dd>';
