@@ -109,9 +109,9 @@ class syntax_plugin_gh extends SyntaxPlugin
         $url = 'https://' . $data['base'] . '/' . $data['repo'] . '/blob/' . $data['blob'] . '/' . $data['file'];
         if (is_int($data['from']) && is_int($data['to'])) {
             if ($data['from'] == $data['to'])
-                $url .= '#L'.($data['from']);
+                $url .= '#L' . $data['from'];
             else
-                $url .= '#L'.($data['from']).'-L'.$data['to'];
+                $url .= '#L' . $data['from'] . '-L'.$data['to'];
         }
 
         // check if there's a usable cache
